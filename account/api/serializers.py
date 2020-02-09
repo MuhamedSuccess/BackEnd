@@ -17,7 +17,7 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'profile']
+        fields = ['id', 'username', 'email','password', 'profile']
         extra_kwargs = {'password': {'write_only': True, 'required': True}}
 
     # overwrite create method and register new user
@@ -31,9 +31,9 @@ class UserSerializer(ModelSerializer):
         print(token.key)
         return user
 
-    def update(self, instance, validated_data):
+    def partial_update(self, instance, validated_data):
         password = validated_data.pop('password', None)
-        user = self.update(instance, validated_data)
+        user = self.partial_update(instance, validated_data)
 
         if password:
             user.set_password(password)

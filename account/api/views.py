@@ -5,10 +5,12 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import viewsets, generics
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from rest_framework import request
+
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 
@@ -19,6 +21,16 @@ from account.models import UserProfile
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class UserPartialUpdateView(GenericAPIView, UpdateModelMixin):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'id'
+
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 
 class ProfileViewSet(generics.ListCreateAPIView, generics.UpdateAPIView):
@@ -88,8 +100,6 @@ def login(request):
         context['error_message'] = 'Invalid credentials'
 
     return Response(context)
-
-
 
 # @api_view(['POST', ])
 # def registration_view(request):

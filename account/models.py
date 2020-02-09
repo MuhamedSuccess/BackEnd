@@ -11,19 +11,19 @@ from django.dispatch import receiver
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50, null=True, blank=True)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
     is_tourist = models.BooleanField(default=False, null=True)
     is_guide = models.BooleanField(default=False, null=True)
     is_admin = models.BooleanField(default=False, null=True)
-    city = models.CharField(max_length=200, default='', null=True)
+    city = models.CharField(max_length=200, default='', null=True, blank=True)
     phone = models.IntegerField(default=0, null=True)
     birth_date = models.DateField(null=True, verbose_name='birth date')
     avatar = models.ImageField(upload_to='images/', null=True)
     date_joined = models.DateField(null=True)
     last_login = models.DateTimeField(null=True)
-    address = models.CharField(max_length=100, null=True)
-    Country = models.CharField(max_length=50, null=True)
+    address = models.CharField(max_length=100, null=True, blank=True)
+    Country = models.CharField(max_length=50, null=True, blank=True)
 
     SEX_CHOICES = (
         ('F', 'Female',),
@@ -33,6 +33,8 @@ class UserProfile(models.Model):
     sex = models.CharField(
         max_length=1,
         choices=SEX_CHOICES,
+        null=True,
+        blank=True
     )
 
     def __str__(self):
