@@ -29,6 +29,7 @@ class UserPartialUpdateView(GenericAPIView, UpdateModelMixin):
     permission_classes = [IsAuthenticated]
     lookup_field = 'id'
 
+
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 

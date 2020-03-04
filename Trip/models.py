@@ -4,27 +4,47 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+from Trip.TourPlan.models import TourPlan
 from account.models import UserProfile
 
 
+# from Trip.TourPlan.models import TourPlan
+
+
 class Guide(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
 
     def __str__(self):
         return self.user.username
 
-    class Meta:
-        db_table = 'guide'
+    # class Meta:
+    #     db_table = 'guide'
+
+
+class Tourism_Type(models.Model):
+    name = models.CharField(max_length=15)
+
+
+def upload_path(instance, filname):
+    return '/'.join(['covers', str(instance.name), filname])
 
 
 class Trip(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
-
-    check_in_date = models.DateTimeField(null=False)
-    check_out_date = models.DateTimeField(null=False)
+    trip_cover = models.FileField(upload_to=upload_path)
+    cost = models.IntegerField(null=True)
+    date = models.DateTimeField(null=True)
+    days = models.IntegerField(default=0)
+    # adults = models.IntegerField(default=0)
+    # children = models.IntegerField(default=0)
+    trip_plan = models.ForeignKey(TourPlan, on_delete=models.CASCADE)
+    tourism_type = models.ForeignKey(Tourism_Type, on_delete=models.CASCADE)
     guide = models.ForeignKey(Guide, on_delete=models.CASCADE, related_name='trip')
-    no_of_days = models.IntegerField()
+
+    class Meta:
+        db_table = 'trip'
 
     def no_of_tourists(self):
         tourists = Tourist.objects.filter(trip=self)
@@ -63,13 +83,6 @@ class Tourist(models.Model):
 
     class Meta:
         db_table = 'tourist'
-
-
-class TourPlan(models.Model):
-    guide = models.ForeignKey(Guide, on_delete=models.CASCADE)
-
-    def budget(self):
-        pass
 
 
 class Location(models.Model):

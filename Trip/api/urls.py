@@ -16,11 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
-from .views import TripViewSet, GuideViewSet
+
+from Trip.TourPlan.views import TourPlanViewSet
+from .views import TripViewSet, GuideViewSet, TourismTypeViewSet
 from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'trip', TripViewSet, basename='trips')
 router.register(r'guide', GuideViewSet, basename='guides')
+router.register(r'tour-plan', TourPlanViewSet, basename='plans')
+router.register(r'tourism-types', TourismTypeViewSet, basename='tourism-types')
 urlpatterns = [
     path('', include(router.urls))
 ]

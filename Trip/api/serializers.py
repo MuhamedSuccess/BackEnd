@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer
 from rest_framework.authtoken.models import Token
 
-from Trip.models import Tourist, Guide, Trip
+from Trip.models import Tourist, Guide, Trip, Tourism_Type
 from account.models import UserProfile
-from account.api.serializers import ProfileSerializer
+from account.api.serializers import ProfileSerializer, UserSerializer
 from account.models import User
 
 
@@ -18,6 +18,9 @@ class TripSerializer(ModelSerializer):
     class Meta:
         model = Trip
         fields = '__all__'
+
+        depth= 1
+
         # fields = [
         #     'id',
         #     'name',
@@ -31,13 +34,19 @@ class TripSerializer(ModelSerializer):
         # ]
 
 
+class TourismTypeSerializer(ModelSerializer):
+    class Meta:
+        model = Tourism_Type
+        fields = '__all__'
+
+
 class GuideSerializer(ModelSerializer):
     trip = TripSerializer(required=False, many=True)
     # profile = ProfileSerializer(required=False)
-
+    user = UserSerializer(required=False)
     class Meta:
         model = Guide
-        fields = ['id', 'trip']
+        fields = ['id', 'trip', 'user']
 
     # def save(self, **kwargs):
     #     # # profile = validated_data.pop('profile', None)

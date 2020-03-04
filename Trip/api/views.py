@@ -7,9 +7,10 @@ from rest_framework.decorators import action, permission_classes
 
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from Trip.models import Tourist, Guide, Trip
-from .serializers import TouristSerializer, GuideSerializer, TripSerializer
+from Trip.models import Tourist, Guide, Trip, Tourism_Type
+from .serializers import TouristSerializer, GuideSerializer, TripSerializer, TourismTypeSerializer
 from account.models import UserProfile
+
 
 class TouristViewSet(viewsets.ModelViewSet):
     queryset = Tourist.objects.all()
@@ -27,7 +28,7 @@ class GuideViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         user = request.user
         user_obj = get_object_or_404(User, pk=user.i)
-        user_obj.profile.is_guide=True
+        user_obj.profile.is_guide = True
         user_obj.save()
         # print(user_obj.username)
 
@@ -38,7 +39,6 @@ class GuideViewSet(viewsets.ModelViewSet):
         return Response(response, status=status.HTTP_200_OK)
 
 
-
 class TripViewSet(viewsets.ModelViewSet):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
@@ -47,11 +47,13 @@ class TripViewSet(viewsets.ModelViewSet):
 
     # @action(detail=False,methods=['POST'], permission_classes=[IsAuthenticated])
     # @permission_classes((IsAdminUser,))
-    def create(self, request, *args, **kwargs):
+
+    def post(self, request, *args, **kwargs):
         data = request.data
         # data['guide'] =  '1'       request.user.pk
         serializer = TripSerializer(data=data)
         data = {}
+        print(request.data)
         if serializer.is_valid():
             trip = serializer.save()
             response = {'message': 'Trip added successfully', 'trip': serializer.data}
@@ -64,3 +66,10 @@ class TripViewSet(viewsets.ModelViewSet):
     #         return [IsAuthenticated()]
     #     else:
     #         return super(self, TripViewSet).get_permissions()
+
+
+class TourismTypeViewSet(viewsets.ModelViewSet):
+    queryset = Tourism_Type.objects.all()
+    serializer_class = TourismTypeSerializer
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated]

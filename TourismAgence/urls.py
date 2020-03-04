@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
+from django.conf.urls.static import static
+from TourismAgence import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,3 +25,10 @@ urlpatterns = [
     path('auth/', obtain_auth_token),
     path('api/', include('Trip.api.urls')),
 ]
+
+# if project is in debug mode import these urls
+if settings.DEBUG:
+    # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
+
