@@ -18,7 +18,7 @@ urlpatterns = [
     path('profile/', ProfileViewSet.as_view(), name="profile"),
     path('profile/<int:id>/', ProfileDetailsAPIView.as_view(), name="profile-view"),
     path('login/', login, name="login"),
-    # path('profile/<int:id>/edit/', ProfileUpdateAPIView.as_view(), name="profile-update"),
+    path('user-profile/<int:id>/edit/', ProfileUpdateAPIView.as_view(), name="profile-update"),
     path('profile/<int:id>/edit/', UserPartialUpdateView.as_view(), name="profile-update"),
 
     # path('profile/<int:user_id>/', include(router.urls))
